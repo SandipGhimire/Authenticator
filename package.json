@@ -1,0 +1,33 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "type-check": "vue-tsc --noEmit"
+    },
+    "dependencies": {
+        "@lucide/vue": "^1.26.0",
+        "axios": "^1.18.1",
+        "lucide-vue-next": "^1.0.0",
+        "pinia": "^4.0.2",
+        "sweetalert2": "^11.26.25",
+        "vue": "^3.5.40",
+        "vue-router": "^5.2.0"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.3.3",
+        "@tsconfig/node26": "^26.0.0",
+        "@vitejs/plugin-vue": "^6.0.8",
+        "globals": "^17.7.0",
+        "jiti": "^2.7.0",
+        "laravel-vite-plugin": "^3.1",
+        "npm-run-all2": "^9.0.2",
+        "prettier": "^3.9.6",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^6.0.3",
+        "vite": "^8.1.5",
+        "vue-tsc": "^3.3.8"
+    }
+}

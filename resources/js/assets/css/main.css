@@ -1,0 +1,46 @@
+@import "./tailwind.css";
+
+:root {
+    color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+}
+
+#app {
+    display: flex;
+    min-height: 100dvh;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-signal-bright);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

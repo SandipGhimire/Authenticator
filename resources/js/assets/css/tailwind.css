@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/*
+  Design tokens for the dark shell.
+  Surfaces/accent are sampled from the app icon (public/icon.png) so the
+  in-app palette continues the brand instead of picking a generic dark+accent default.
+*/
+@theme {
+    --color-ink: #0a0d12;
+    --color-panel: #12161d;
+    --color-panel-2: #1a2029;
+    --color-line: #232a35;
+
+    --color-paper: #edf1f6;
+    --color-ash: #8891a1;
+
+    --color-signal: #3e7bb6;
+    --color-signal-bright: #7ec1f0;
+
+    --font-display: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo, monospace;
+}
