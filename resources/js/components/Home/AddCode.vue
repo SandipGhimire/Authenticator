@@ -25,7 +25,9 @@
                         class="flex items-center justify-between border-b border-line px-5 py-4"
                     >
                         <div>
-                            <p class="font-display text-base font-semibold text-paper">
+                            <p
+                                class="font-display text-base font-semibold text-paper"
+                            >
                                 Add account
                             </p>
 
@@ -123,7 +125,9 @@
                                 </button>
                             </div>
 
-                            <p class="text-center font-mono text-[10px] text-ash">
+                            <p
+                                class="text-center font-mono text-[10px] text-ash"
+                            >
                                 QR scanning uses native mobile capabilities.
                             </p>
                         </div>

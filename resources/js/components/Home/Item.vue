@@ -6,7 +6,9 @@
                     <div
                         class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface"
                     >
-                        <span class="font-display text-sm font-semibold text-signal">
+                        <span
+                            class="font-display text-sm font-semibold text-signal"
+                        >
                             {{ account.name.charAt(0) }}
                         </span>
                     </div>
@@ -39,7 +41,9 @@
         </div>
 
         <div class="mt-5 flex items-end justify-between">
-            <p class="font-mono text-3xl font-semibold tracking-[0.15em] text-paper">
+            <p
+                class="font-mono text-3xl font-semibold tracking-[0.15em] text-paper"
+            >
                 {{ account.code }}
             </p>
 

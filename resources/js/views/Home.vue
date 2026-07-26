@@ -7,11 +7,7 @@
             <div
                 class="flex h-16 w-16 items-center justify-center rounded-2xl border border-line bg-panel"
             >
-                <Icons
-                    name="Shield"
-                    :size="28"
-                    class-value="text-signal"
-                />
+                <Icons name="Shield" :size="28" class-value="text-signal" />
             </div>
 
             <!-- Text -->
@@ -22,9 +18,7 @@
                     Your vault
                 </p>
 
-                <h2
-                    class="font-display text-xl font-semibold text-paper"
-                >
+                <h2 class="font-display text-xl font-semibold text-paper">
                     No codes stored yet
                 </h2>
 
@@ -98,11 +92,7 @@
                 <div
                     class="flex h-12 w-12 items-center justify-center rounded-xl border border-line bg-panel"
                 >
-                    <Icons
-                        name="SearchX"
-                        :size="21"
-                        class-value="text-ash"
-                    />
+                    <Icons name="SearchX" :size="21" class-value="text-ash" />
                 </div>
 
                 <p class="mt-4 text-sm font-medium text-paper">
@@ -215,5 +205,5 @@ const handleAdd = (account: {
 
 onMounted(() => {
     appStore.setTitle("Home");
-})
+});
 </script>

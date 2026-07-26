@@ -2,8 +2,14 @@
     <div class="flex flex-col gap-8 px-6 py-10">
         <!-- App Header -->
         <div class="flex flex-col items-center gap-4 text-center">
-            <div class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl">
-                <img :src="iconUrl" alt="Authenticator" class="h-full w-full object-cover" />
+            <div
+                class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl"
+            >
+                <img
+                    :src="iconUrl"
+                    alt="Authenticator"
+                    class="h-full w-full object-cover"
+                />
             </div>
 
             <div>
@@ -11,21 +17,21 @@
                     Authenticator
                 </h1>
 
-                <p class="mt-1 font-mono text-xs text-ash">
-                    v1.0.0
-                </p>
+                <p class="mt-1 font-mono text-xs text-ash">v1.0.0</p>
             </div>
 
             <p class="max-w-[50ch] text-sm leading-relaxed text-ash">
                 A simple, privacy-focused authenticator for keeping your
-                two-factor authentication codes close at hand. Your codes
-                stay on your device and are available whenever you need them.
+                two-factor authentication codes close at hand. Your codes stay
+                on your device and are available whenever you need them.
             </p>
         </div>
 
         <!-- Features -->
         <section>
-            <h2 class="mb-3 px-1 font-mono text-xs uppercase tracking-wider text-ash">
+            <h2
+                class="mb-3 px-1 font-mono text-xs uppercase tracking-wider text-ash"
+            >
                 Features
             </h2>
 
@@ -56,7 +62,9 @@
 
         <!-- Built With -->
         <section>
-            <h2 class="mb-3 px-1 font-mono text-xs uppercase tracking-wider text-ash">
+            <h2
+                class="mb-3 px-1 font-mono text-xs uppercase tracking-wider text-ash"
+            >
                 Built with NativePHP
             </h2>
 
@@ -109,9 +117,7 @@
 
         <!-- Developer -->
         <div class="border-t border-line pt-6 text-center">
-            <p class="text-xs text-ash">
-                Designed, developed & maintained by
-            </p>
+            <p class="text-xs text-ash">Designed, developed & maintained by</p>
 
             <a
                 href="https://github.com/SandipGhimire/"
@@ -179,5 +185,5 @@ const plugins = [
 
 onMounted(() => {
     appStore.setTitle("About");
-})
+});
 </script>

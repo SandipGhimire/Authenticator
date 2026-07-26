@@ -1,5 +1,7 @@
 <template>
-    <div class="flex min-h-full w-full flex-col items-center justify-center px-6 py-10">
+    <div
+        class="flex min-h-full w-full flex-col items-center justify-center px-6 py-10"
+    >
         <!-- Status -->
         <div class="text-center">
             <p
@@ -15,8 +17,8 @@
             <p
                 class="mx-auto mt-3 max-w-[40ch] text-sm leading-relaxed text-ash"
             >
-                Use your device biometric authentication to securely access
-                your stored authentication codes.
+                Use your device biometric authentication to securely access your
+                stored authentication codes.
             </p>
         </div>
 
@@ -52,9 +54,21 @@
                 <Transition name="icon-switch" mode="out-in">
                     <Icons
                         key="fingerprint"
-                        :name="status === 'success' ? 'Check' : status === 'failed' ? 'X' : 'Fingerprint'"
+                        :name="
+                            status === 'success'
+                                ? 'Check'
+                                : status === 'failed'
+                                  ? 'X'
+                                  : 'Fingerprint'
+                        "
                         :size="72"
-                        :class-value="status === 'success' ? 'text-green-500' : status === 'failed' ? 'text-red-400' : 'text-signal'"
+                        :class-value="
+                            status === 'success'
+                                ? 'text-green-500'
+                                : status === 'failed'
+                                  ? 'text-red-400'
+                                  : 'text-signal'
+                        "
                     />
                 </Transition>
             </button>
@@ -89,11 +103,7 @@
                 </p>
             </div>
 
-            <div
-                v-else
-                key="idle"
-                class="mt-8 text-center"
-            >
+            <div v-else key="idle" class="mt-8 text-center">
                 <p class="text-lg font-medium text-paper">
                     Tap to authenticate
                 </p>
@@ -107,7 +117,7 @@
         <div v-if="isPC" class="mt-8 text-center">
             <button
                 type="button"
-                @click="handleCompleted({success: true})"
+                @click="handleCompleted({ success: true })"
                 class="font-mono text-sm text-ash border border-ash rounded px-2 py-1"
             >
                 Login Bypass
@@ -119,8 +129,12 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import Icons from "@/components/common/Icons.vue";
-import {On, Off, Events} from "@vendor/sghimire/mobile-biometric/resources/js/biometric.js"
-import useApp from "@/store/App/App"
+import {
+    On,
+    Off,
+    Events,
+} from "@vendor/sghimire/mobile-biometric/resources/js/biometric.js";
+import useApp from "@/store/App/App";
 import { useRoute } from "vue-router";
 
 type AuthenticationStatus = "idle" | "success" | "failed";
@@ -146,22 +160,22 @@ const resetAfter = (duration = 1800) => {
 
 onMounted(() => {
     On(Events.Biometric.Completed, handleCompleted);
-    if(route.query.pc == '1') {
+    if (route.query.pc == "1") {
         isPC.value = true;
     }
-})
+});
 
 onUnmounted(() => Off(Events.Biometric.Completed, handleCompleted));
 
-const handleCompleted = (isSuccess: {success: boolean}) => {
+const handleCompleted = (isSuccess: { success: boolean }) => {
     status.value = isSuccess.success ? "success" : "failed";
-    if(isSuccess.success) {
+    if (isSuccess.success) {
         setTimeout(() => {
             appStore.successLogin();
         }, 1000);
     }
     resetAfter();
-}
+};
 </script>
 
 <style scoped>

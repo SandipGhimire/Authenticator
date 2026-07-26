@@ -17,6 +17,10 @@
     --color-signal: #3e7bb6;
     --color-signal-bright: #7ec1f0;
 
-    --font-display: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo, monospace;
+    --font-display:
+        ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif;
+    --font-mono:
+        ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo,
+        monospace;
 }

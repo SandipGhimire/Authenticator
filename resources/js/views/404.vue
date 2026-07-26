@@ -1,18 +1,29 @@
 <template>
-    <div class="relative flex min-h-full w-full flex-col items-center justify-center overflow-hidden px-6 py-10">
+    <div
+        class="relative flex min-h-full w-full flex-col items-center justify-center overflow-hidden px-6 py-10"
+    >
         <!-- Ambient Grid -->
         <div
             class="pointer-events-none absolute inset-0 opacity-[0.025]"
             style="
                 background-image:
-                    linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px);
+                    linear-gradient(
+                        rgba(255, 255, 255, 0.8) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0.8) 1px,
+                        transparent 1px
+                    );
                 background-size: 32px 32px;
             "
         />
 
         <!-- Main -->
-        <main class="relative z-10 flex w-full max-w-sm flex-col items-center text-center">
+        <main
+            class="relative z-10 flex w-full max-w-sm flex-col items-center text-center"
+        >
             <!-- Heading -->
             <div class="space-y-3">
                 <p

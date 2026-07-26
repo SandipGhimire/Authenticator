@@ -32,7 +32,11 @@ const navIconMap: Record<string, string> = { home: "Home", about: "Info" };
     height: 2px;
     width: 28px;
     border-radius: 2px;
-    background: linear-gradient(90deg, var(--color-signal), var(--color-signal-bright));
+    background: linear-gradient(
+        90deg,
+        var(--color-signal),
+        var(--color-signal-bright)
+    );
     transform: translateX(-50%) scaleX(0);
     transform-origin: center;
     transition: transform 0.25s ease;

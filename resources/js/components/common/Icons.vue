@@ -35,7 +35,8 @@ const props = withDefaults(defineProps<IconProps>(), {
 });
 
 const icon = computed<LucideIcon | null>(() => {
-    const iconComponent = icons[props.name as IconName] as LucideIcon | undefined;
+    const iconComponent = icons[props.name as IconName] as
+        LucideIcon | undefined;
     return iconComponent || null;
 });
 </script>

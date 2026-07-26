@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "type-check": "vue-tsc --noEmit"
+        "type-check": "vue-tsc --noEmit",
+        "format": "prettier --write ./resources/js"
     },
     "dependencies": {
         "@lucide/vue": "^1.26.0",
