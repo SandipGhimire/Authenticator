@@ -4056,16 +4056,16 @@
         },
         {
             "name": "sghimire/mobile-scanner",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SandipGhimire/NativePHP-MobileScanner.git",
-                "reference": "07f8131264563a2ad9332652ec3c8df85fdf9903"
+                "reference": "8787351eb8a69fd627cf0efe1cd6eea441432a48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SandipGhimire/NativePHP-MobileScanner/zipball/07f8131264563a2ad9332652ec3c8df85fdf9903",
-                "reference": "07f8131264563a2ad9332652ec3c8df85fdf9903",
+                "url": "https://api.github.com/repos/SandipGhimire/NativePHP-MobileScanner/zipball/8787351eb8a69fd627cf0efe1cd6eea441432a48",
+                "reference": "8787351eb8a69fd627cf0efe1cd6eea441432a48",
                 "shasum": ""
             },
             "require": {
@@ -4117,22 +4117,22 @@
             ],
             "support": {
                 "issues": "https://github.com/SandipGhimire/NativePHP-MobileScanner/issues",
-                "source": "https://github.com/SandipGhimire/NativePHP-MobileScanner/tree/1.0.0"
+                "source": "https://github.com/SandipGhimire/NativePHP-MobileScanner/tree/1.0.1"
             },
-            "time": "2026-07-26T09:17:26+00:00"
+            "time": "2026-07-26T19:22:40+00:00"
         },
         {
             "name": "sghimire/mobile-secure-storage",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SandipGhimire/NativePHP-MobileSecureStorage.git",
-                "reference": "c2c4d237d023053914787331f667336fae1302c3"
+                "reference": "5e5fa1dd6f210d694300638ee42b2db22fb7be91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SandipGhimire/NativePHP-MobileSecureStorage/zipball/c2c4d237d023053914787331f667336fae1302c3",
-                "reference": "c2c4d237d023053914787331f667336fae1302c3",
+                "url": "https://api.github.com/repos/SandipGhimire/NativePHP-MobileSecureStorage/zipball/5e5fa1dd6f210d694300638ee42b2db22fb7be91",
+                "reference": "5e5fa1dd6f210d694300638ee42b2db22fb7be91",
                 "shasum": ""
             },
             "require": {
@@ -4181,9 +4181,9 @@
             ],
             "support": {
                 "issues": "https://github.com/SandipGhimire/NativePHP-MobileSecureStorage/issues",
-                "source": "https://github.com/SandipGhimire/NativePHP-MobileSecureStorage/tree/1.0.0"
+                "source": "https://github.com/SandipGhimire/NativePHP-MobileSecureStorage/tree/1.0.1"
             },
-            "time": "2026-07-26T09:17:28+00:00"
+            "time": "2026-07-26T19:22:38+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
