@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c32dd37adb0d9a4c155c2d3c64282cf4",
+    "content-hash": "1116fe79610ea2249c2bcea4f0f9a7b6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4053,6 +4053,70 @@
                 "source": "https://github.com/SandipGhimire/NativePHP-MobileBiometrics/tree/1.0.0"
             },
             "time": "2026-07-26T09:17:25+00:00"
+        },
+        {
+            "name": "sghimire/mobile-file-access",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SandipGhimire/NativePHP-MobileFileAccess.git",
+                "reference": "3b93f29a997262fc5e5c562d9b86c662dd7cbdec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SandipGhimire/NativePHP-MobileFileAccess/zipball/3b93f29a997262fc5e5c562d9b86c662dd7cbdec",
+                "reference": "3b93f29a997262fc5e5c562d9b86c662dd7cbdec",
+                "shasum": ""
+            },
+            "require": {
+                "nativephp/mobile": "^3.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.29",
+                "pestphp/pest": "^3.0"
+            },
+            "type": "nativephp-plugin",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Sandip\\FileAccess\\Native\\FileAccessServiceProvider"
+                    ]
+                },
+                "nativephp": {
+                    "manifest": "nativephp.json"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sandip\\FileAccess\\Native\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sandip Ghimire",
+                    "email": "sandipghimire2076@gmail.com"
+                }
+            ],
+            "description": "Generic native file save/open (Storage Access Framework / UIDocumentPicker) for NativePHP Mobile — pick any file into your app or save arbitrary bytes to a user-chosen location, with no storage permissions required.",
+            "keywords": [
+                "document-picker",
+                "file-access",
+                "files",
+                "laravel",
+                "mobile",
+                "nativephp",
+                "storage-access-framework"
+            ],
+            "support": {
+                "issues": "https://github.com/SandipGhimire/NativePHP-MobileFileAccess/issues",
+                "source": "https://github.com/SandipGhimire/NativePHP-MobileFileAccess/tree/1.0.0"
+            },
+            "time": "2026-07-27T20:07:57+00:00"
         },
         {
             "name": "sghimire/mobile-scanner",

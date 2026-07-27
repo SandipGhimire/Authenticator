@@ -78,7 +78,11 @@ import Icons from "@/components/common/Icons.vue";
 import { navItems } from "@/router";
 import useApp from "@/store/App/App";
 
-const navIconMap: Record<string, string> = { home: "Home", about: "Info" };
+const navIconMap: Record<string, string> = {
+    home: "Home",
+    "import-export": "DatabaseBackup",
+    about: "Info",
+};
 const appStore = useApp();
 
 const modelValue = defineModel<boolean>({ default: false });

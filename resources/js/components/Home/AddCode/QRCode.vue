@@ -32,9 +32,7 @@
                 <Icons name="ScanLine" :size="30" class-value="text-signal" />
             </div>
 
-            <h3 class="mt-4 text-xl font-medium text-paper">
-                Scan a QR code {{ scannedData }}
-            </h3>
+            <h3 class="mt-4 text-xl font-medium text-paper">Scan a QR code</h3>
 
             <p
                 class="mx-auto mt-1 max-w-[40ch] text-xs leading-relaxed text-ash"
@@ -45,7 +43,7 @@
 
             <button
                 type="button"
-                class="mt-5 inline-flex items-center gap-2 rounded-lg bg-signal px-4 py-2.5 text-xs font-medium text-paper transition-opacity hover:opacity-90"
+                class="mt-5 inline-flex items-center gap-2 rounded-lg bg-signal px-4 py-2.5 text-xs font-medium text-paper transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 @click="scanCode"
             >
                 <Icons name="ScanLine" :size="16" />
@@ -61,21 +59,26 @@
 
 <script lang="ts" setup>
 import Icons from "@/components/common/Icons.vue";
-import { ParsedAccount, parseOtpAuthUri } from "@/core/lib/otp";
+import { OtpParseError, ParsedAccount, parseOtpAuthUri } from "@/core/lib/otp";
+import { saveAccount } from "@/core/lib/vault";
 import {
     Scanner,
     On,
     Off,
     Events,
 } from "@vendor/sghimire/mobile-scanner/resources/js/scanner.js";
-import { reactive, ref } from "vue";
+import { onUnmounted, reactive, ref } from "vue";
+
+const emit = defineEmits<{
+    saved: [];
+}>();
+
+const SCAN_ID = "authenticator-code-scanner";
 
 const error = reactive({
     status: false,
     reason: "",
 });
-
-const scannedData = ref<ParsedAccount>();
 
 const showError = (message: string) => {
     error.status = true;
@@ -117,20 +120,29 @@ const getErrorMessage = (reason: string | null): string | null => {
     }
 };
 
+const stopListening = () => {
+    Off(Events.Scanner.CodeScanned, onScanned);
+    Off(Events.Scanner.Cancelled, onCancelled);
+};
+
 const scanCode = async () => {
+    stopListening();
+
     clearError();
 
     On(Events.Scanner.CodeScanned, onScanned);
     On(Events.Scanner.Cancelled, onCancelled);
 
-    await Scanner.scan()
-        .id("authenticator-code-scanner")
-        .prompt("Scan 2FA QR Code!");
+    try {
+        await Scanner.scan().id(SCAN_ID).prompt("Scan 2FA QR Code!");
+    } catch (e: any) {
+        stopListening();
+        showError("Unexpected Error: " + e);
+    }
 };
 
 const onCancelled = (data: { reason: string | null; id: string | null }) => {
-    Off(Events.Scanner.CodeScanned, onScanned);
-    Off(Events.Scanner.Cancelled, onCancelled);
+    stopListening();
 
     const message = getErrorMessage(data.reason);
 
@@ -139,22 +151,31 @@ const onCancelled = (data: { reason: string | null; id: string | null }) => {
     }
 };
 
-const onScanned = (data: {
+const onScanned = async (data: {
     data: string;
     format: string;
     id: string | null;
 }) => {
-    Off(Events.Scanner.CodeScanned, onScanned);
-    Off(Events.Scanner.Cancelled, onCancelled);
+    stopListening();
 
     try {
-        scannedData.value = parseOtpAuthUri(data.data);
+        const accountDetail: ParsedAccount = parseOtpAuthUri(data.data);
+
+        await saveAccount(accountDetail);
 
         clearError();
-    } catch {
-        showError(
-            "The scanned QR code is not a valid authenticator QR code. Please scan a valid 2FA QR code and try again.",
-        );
+        emit("saved");
+    } catch (e: any) {
+        if (e instanceof OtpParseError) {
+            showError(e.message);
+        } else {
+            showError("Unexpected Error: " + e);
+        }
     }
 };
+
+onUnmounted(() => {
+    stopListening();
+    Scanner.stop(SCAN_ID);
+});
 </script>

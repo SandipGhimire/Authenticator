@@ -2,7 +2,6 @@
     <div
         class="relative flex min-h-full w-full flex-col items-center justify-center overflow-hidden px-6 py-10"
     >
-        <!-- Ambient Grid -->
         <div
             class="pointer-events-none absolute inset-0 opacity-[0.025]"
             style="
@@ -20,11 +19,9 @@
             "
         />
 
-        <!-- Main -->
         <main
             class="relative z-10 flex w-full max-w-sm flex-col items-center text-center"
         >
-            <!-- Heading -->
             <div class="space-y-3">
                 <p
                     class="font-mono text-[10px] uppercase tracking-[0.25em] text-ash"
@@ -46,7 +43,6 @@
                 </p>
             </div>
 
-            <!-- Diagnostic -->
             <div
                 class="mt-8 w-full rounded-xl border border-line bg-panel p-4 text-left"
             >
@@ -75,7 +71,6 @@
                 </div>
             </div>
 
-            <!-- Action -->
             <button
                 type="button"
                 class="mt-6 inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-5 py-3 text-sm font-medium text-paper transition-all hover:border-signal hover:text-signal active:scale-[0.98]"
@@ -85,7 +80,6 @@
                 Return to vault
             </button>
 
-            <!-- Footer -->
             <p class="mt-8 font-mono text-[10px] text-ash">
                 Nothing was lost. Except this route.
             </p>

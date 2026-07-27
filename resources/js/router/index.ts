@@ -9,11 +9,17 @@ export interface NavItem {
     name: string;
     path: string;
     label: string;
+    showInNav?: boolean;
 }
 
 export const navItems: NavItem[] = [
-    { name: "home", path: "/user/home", label: "Home" },
-    { name: "about", path: "/user/about", label: "About" },
+    { name: "home", path: "/user/home", label: "Home", showInNav: true },
+    {
+        name: "import-export",
+        path: "/user/import-export",
+        label: "Backup",
+    },
+    { name: "about", path: "/user/about", label: "About", showInNav: true },
 ];
 
 const routes: RouteRecordRaw[] = [
@@ -32,6 +38,11 @@ const routes: RouteRecordRaw[] = [
                 path: "home",
                 name: "home",
                 component: () => import("@/views/Home.vue"),
+            },
+            {
+                path: "import-export",
+                name: "import-export",
+                component: () => import("@/views/ImportExport.vue"),
             },
             {
                 path: "about",

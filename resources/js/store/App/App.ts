@@ -6,6 +6,7 @@ const useApp = defineStore("app", {
     state: () => ({
         isAuthenticated: false,
         pageTitle: "",
+        isLoading: false,
     }),
 
     getters: {},
@@ -31,6 +32,10 @@ const useApp = defineStore("app", {
 
         setTitle(title: string) {
             this.pageTitle = title;
+        },
+
+        setLoading(loading: boolean) {
+            this.isLoading = loading;
         },
     },
 });

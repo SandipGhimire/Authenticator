@@ -2,7 +2,6 @@
     <div
         class="flex min-h-full w-full flex-col items-center justify-center px-6 py-10"
     >
-        <!-- Status -->
         <div class="text-center">
             <p
                 class="font-mono text-[14px] uppercase tracking-[0.2em] text-ash"

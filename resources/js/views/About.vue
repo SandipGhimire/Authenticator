@@ -1,6 +1,5 @@
 <template>
     <div class="flex flex-col gap-8 px-6 py-10">
-        <!-- App Header -->
         <div class="flex flex-col items-center gap-4 text-center">
             <div
                 class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl"
@@ -27,7 +26,6 @@
             </p>
         </div>
 
-        <!-- Features -->
         <section>
             <h2
                 class="mb-3 px-1 font-mono text-xs uppercase tracking-wider text-ash"
@@ -60,7 +58,6 @@
             </ul>
         </section>
 
-        <!-- Built With -->
         <section>
             <h2
                 class="mb-3 px-1 font-mono text-xs uppercase tracking-wider text-ash"
@@ -154,7 +151,6 @@
             </div>
         </section>
 
-        <!-- Developer -->
         <div class="border-t border-line pt-6 text-center">
             <p class="text-xs text-ash">Designed, developed & maintained by</p>
 
@@ -222,6 +218,13 @@ const plugins = [
         icon: "LockKeyhole",
         url: "https://packagist.org/packages/sghimire/mobile-secure-storage",
         github: "https://github.com/SandipGhimire/NativePHP-MobileSecureStorage/",
+    },
+    {
+        name: "Mobile File Access",
+        description: "Native file access capabilities for mobile.",
+        icon: "File",
+        url: "https://packagist.org/packages/sghimire/mobile-file-access",
+        github: "https://github.com/SandipGhimire/NativePHP-MobileFileAccess/",
     },
 ];
 

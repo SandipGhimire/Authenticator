@@ -83,8 +83,8 @@
                     </div>
 
                     <div class="p-5">
-                        <QRCode v-if="tab === 'scan'"></QRCode>
-                        <ManualEntry v-else></ManualEntry>
+                        <QRCode v-if="tab === 'scan'" @saved="handleSaved" />
+                        <ManualEntry v-else @saved="handleSaved" />
                     </div>
                 </div>
             </div>
@@ -99,13 +99,7 @@ import QRCode from "./AddCode/QRCode.vue";
 import ManualEntry from "./AddCode/ManualEntry.vue";
 
 const emit = defineEmits<{
-    add: [
-        account: {
-            name: string;
-            username: string;
-            secret: string;
-        },
-    ];
+    saved: [];
 }>();
 
 const open = ref(false);
@@ -114,6 +108,11 @@ const tab = ref<"scan" | "manual">("scan");
 const close = () => {
     open.value = false;
     tab.value = "scan";
+};
+
+const handleSaved = () => {
+    close();
+    emit("saved");
 };
 </script>
 

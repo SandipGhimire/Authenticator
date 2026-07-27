@@ -11,6 +11,7 @@
         "laravel/tinker": "^3.0",
         "nativephp/mobile": "^3.3",
         "sghimire/mobile-biometric": "^1.0",
+        "sghimire/mobile-file-access": "^1.0",
         "sghimire/mobile-scanner": "^1.0",
         "sghimire/mobile-secure-storage": "^1.0"
     },

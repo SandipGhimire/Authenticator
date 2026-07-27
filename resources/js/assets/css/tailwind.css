@@ -9,6 +9,7 @@
     --color-ink: #0a0d12;
     --color-panel: #12161d;
     --color-panel-2: #1a2029;
+    --color-surface: var(--color-panel-2);
     --color-line: #232a35;
 
     --color-paper: #edf1f6;
