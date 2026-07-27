@@ -5,40 +5,30 @@
             class="flex min-h-[60vh] flex-col items-center justify-center text-center"
         >
             <div
-                class="flex h-16 w-16 items-center justify-center rounded-2xl border border-line bg-panel"
+                class="flex h-20 w-20 items-center justify-center rounded-2xl border border-line bg-panel overflow-hidden"
             >
-                <Icons name="Shield" :size="28" class-value="text-signal" />
+                <img :src="iconUrl" alt="Authenticator" />
             </div>
 
             <!-- Text -->
             <div class="mt-5 space-y-2">
                 <p
-                    class="font-mono text-[11px] uppercase tracking-[0.2em] text-ash"
+                    class="font-mono text-[12px] uppercase tracking-[0.2em] text-ash"
                 >
                     Your vault
                 </p>
 
-                <h2 class="font-display text-xl font-semibold text-paper">
+                <h2 class="font-display text-2xl font-semibold text-paper">
                     No codes stored yet
                 </h2>
 
                 <p
-                    class="mx-auto max-w-[30ch] text-sm leading-relaxed text-ash"
+                    class="mx-auto max-w-[50ch] text-sm leading-relaxed text-ash"
                 >
                     Add your first two-factor authentication account and keep
                     your verification codes ready whenever you need them.
                 </p>
             </div>
-
-            <!-- Demo button -->
-            <button
-                type="button"
-                class="mt-6 inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-4 py-2.5 text-xs font-medium text-paper transition-colors hover:border-signal hover:text-signal"
-                @click="loadDemoAccounts"
-            >
-                <Icons name="FlaskConical" :size="15" />
-                Load demo accounts
-            </button>
 
             <p class="mt-8 font-mono text-xs text-ash">
                 Everything stays on this device.
@@ -126,6 +116,7 @@ import Icons from "@/components/common/Icons.vue";
 import AuthenticatorItem from "@/components/Home/Item.vue";
 import AddCode from "@/components/Home/AddCode.vue";
 import useApp from "@/store/App/App";
+import iconUrl from "@/assets/icon.png";
 
 const appStore = useApp();
 
