@@ -68,3 +68,10 @@ Thumbs.db
 # Misc
 # ============================================================
 .npmrc
+
+# Android release signing — keep these out of version control
+*.keystore
+*.jks
+
+# Signed release APKs
+/dist/
