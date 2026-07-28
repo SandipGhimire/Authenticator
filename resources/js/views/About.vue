@@ -108,7 +108,7 @@
                         </button>
                         <button
                             type="button"
-                            @click="openLink(plugin.github, plugin.name)"
+                            @click="openExternalLink(plugin.github)"
                             :aria-label="`View ${plugin.name} on Github`"
                             class="shrink-0 text-ash transition-colors hover:text-signal"
                         >
@@ -154,7 +154,7 @@
 
             <button
                 type="button"
-                @click="openLink('https://github.com/SandipGhimire/', 'Github')"
+                @click="openExternalLink('https://github.com/SandipGhimire/')"
                 class="mt-1 inline-block font-mono text-sm text-paper underline decoration-line underline-offset-4 transition-colors hover:text-signal"
             >
                 Sandip Ghimire
@@ -234,6 +234,10 @@ const plugins = [
 ];
 
 async function openLink(url: string, title: string) {
+    await Browser.open(url).title("Sandip Ghimire - " + title);
+}
+
+async function openExternalLink(url: string) {
     await Browser.open(url).external();
 }
 
