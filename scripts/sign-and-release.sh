@@ -19,22 +19,34 @@
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
-# Configuration — edit these or set them as environment variables
+# Configuration — loaded from .env.production (override via environment vars)
 # ---------------------------------------------------------------------------
-APP_VERSION="${NATIVEPHP_APP_VERSION:-1.0.0}"
-APP_ID="${NATIVEPHP_APP_ID:-com.sandip.authenticator}"
-APP_NAME="${APP_NAME:-Authenticator}"
+ENV_FILE="$(dirname "$0")/../.env.production"
+if [[ -f "$ENV_FILE" ]]; then
+    _env_get() { grep -E "^$1=" "$ENV_FILE" | head -1 | cut -d= -f2- | tr -d "\"'"; }
+    APP_VERSION="${NATIVEPHP_APP_VERSION:-$(_env_get NATIVEPHP_APP_VERSION)}"
+    APP_ID="${NATIVEPHP_APP_ID:-$(_env_get NATIVEPHP_APP_ID)}"
+    APP_NAME="${APP_NAME:-$(_env_get APP_NAME)}"
+    BUILD_TOOLS="${BUILD_TOOLS:-$(_env_get BUILD_TOOLS)}"
+    KEYTOOL="${KEYTOOL:-$(_env_get KEYTOOL)}"
+else
+    echo "[WARN] .env.production not found at $ENV_FILE — using built-in defaults"
+    APP_VERSION="${NATIVEPHP_APP_VERSION:-1.0.0}"
+    APP_ID="${NATIVEPHP_APP_ID:-com.sandip.authenticator}"
+    APP_NAME="${APP_NAME:-Authenticator}"
+    BUILD_TOOLS="${BUILD_TOOLS:-/home/sandip/Android/Sdk/build-tools/36.0.0}"
+    KEYTOOL="${KEYTOOL:-/usr/lib/jvm/java-21-openjdk-amd64/bin/keytool}"
+fi
+
+BUILD_TOOLS="${BUILD_TOOLS%/}"
 
 KEYSTORE_PATH="${KEYSTORE_PATH:-./authenticator-release.keystore}"
 KEY_ALIAS="${KEY_ALIAS:-authenticator}"
-# These will be prompted for if not set as env vars (safer than hardcoding)
 KEYSTORE_PASS="${KEYSTORE_PASS:-}"
 KEY_PASS="${KEY_PASS:-}"
 
-BUILD_TOOLS="${BUILD_TOOLS:-/home/sandip/dev-tools/android-sdk/build-tools/36.0.0}"
 APKSIGNER="$BUILD_TOOLS/apksigner"
 ZIPALIGN="$BUILD_TOOLS/zipalign"
-KEYTOOL="${KEYTOOL:-/home/sandip/dev-tools/jdk-17.0.19+10/bin/keytool}"
 
 UNSIGNED_APK="./nativephp/android/app/build/outputs/apk/release/app-release-unsigned.apk"
 ALIGNED_APK="./nativephp/android/app/build/outputs/apk/release/app-release-aligned.apk"
@@ -81,8 +93,30 @@ success "Toolchain OK"
 # ---------------------------------------------------------------------------
 # Step 2 — Build the release APK
 # ---------------------------------------------------------------------------
-info "Building release APK..."
+info "Removing existing release APK files..."
+# Remove already existing APK files
+if [[ -f "$UNSIGNED_APK" ]]; then
+    info "Removing existing $UNSIGNED_APK"
+    rm -f "$UNSIGNED_APK"
+fi
+
+if [[ -f "$ALIGNED_APK" ]]; then
+    info "Removing existing $ALIGNED_APK"
+    rm -f "$ALIGNED_APK"
+fi
+
+if [[ -f "$SIGNED_APK" ]]; then
+    info "Removing existing $SIGNED_APK"
+    rm -f "$SIGNED_APK"
+fi
+
+# Run build again
+info "Building Frontend..."
+pnpm run build
+
+info "Building Android App..."
 php artisan native:run --build=release android --env=production
+
 [[ -f "$UNSIGNED_APK" ]] || die "Build succeeded but APK not found at $UNSIGNED_APK"
 success "Build complete"
 
