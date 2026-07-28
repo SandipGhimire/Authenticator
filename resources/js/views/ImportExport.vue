@@ -28,6 +28,8 @@
         <div class="space-y-4">
             <ExportPanel :account-count="accountCount" @exported="refresh" />
             <ImportPanel @imported="refresh" />
+            <GoogleImportPanel @imported="refresh" />
+            <GoogleExportPanel :account-count="accountCount" />
         </div>
 
         <p class="mt-6 text-center font-mono text-[10px] text-ash">
@@ -42,6 +44,8 @@ import { onMounted, ref } from "vue";
 import Icons from "@/components/common/Icons.vue";
 import ExportPanel from "@/components/ImportExport/ExportPanel.vue";
 import ImportPanel from "@/components/ImportExport/ImportPanel.vue";
+import GoogleImportPanel from "@/components/ImportExport/GoogleImportPanel.vue";
+import GoogleExportPanel from "@/components/ImportExport/GoogleExportPanel.vue";
 import useApp from "@/store/App/App";
 import { listAccounts } from "@/core/lib/vault";
 

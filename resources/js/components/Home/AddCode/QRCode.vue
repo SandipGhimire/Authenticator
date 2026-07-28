@@ -100,7 +100,7 @@ const getErrorMessage = (reason: string | null): string | null => {
         case "user_cancelled":
             return null;
 
-        case "camera_permission_denied":
+        case "permission_denied":
             return "Camera permission was denied. Please allow camera access and try again.";
 
         case "camera_unavailable":
@@ -114,6 +114,15 @@ const getErrorMessage = (reason: string | null): string | null => {
 
         case "invalid_qr":
             return "The scanned QR code is invalid.";
+
+        case "permission_required":
+            return "You need to grant permission to the app to access the camera.";
+
+        case "stopped_by_app":
+            return "The QR code scanning was stopped by the app.";
+
+        case "camera_error":
+            return "An error occurred while accessing the camera.";
 
         default:
             return "An unexpected error occurred while scanning. Please try again.";

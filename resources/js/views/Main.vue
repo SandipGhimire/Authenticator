@@ -162,6 +162,10 @@ onMounted(() => {
     if (route.query.pc == "1") {
         isPC.value = true;
     }
+
+    setTimeout(() => {
+        appStore.authenticate();
+    }, 300);
 });
 
 onUnmounted(() => Off(Events.Biometric.Completed, handleCompleted));

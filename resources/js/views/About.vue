@@ -98,19 +98,17 @@
                             </p>
                         </div>
 
-                        <a
-                            :href="plugin.url"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <button
+                            type="button"
+                            @click="openLink(plugin.url, plugin.name)"
                             :aria-label="`View ${plugin.name} on Packagist`"
                             class="shrink-0 text-ash transition-colors hover:text-signal"
                         >
                             <Icons name="ExternalLink" :size="18" />
-                        </a>
-                        <a
-                            :href="plugin.github"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        </button>
+                        <button
+                            type="button"
+                            @click="openLink(plugin.github, plugin.name)"
                             :aria-label="`View ${plugin.name} on Github`"
                             class="shrink-0 text-ash transition-colors hover:text-signal"
                         >
@@ -145,7 +143,7 @@
                                     </g>
                                 </g>
                             </svg>
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -154,14 +152,13 @@
         <div class="border-t border-line pt-6 text-center">
             <p class="text-xs text-ash">Designed, developed & maintained by</p>
 
-            <a
-                href="https://github.com/SandipGhimire/"
-                target="_blank"
-                rel="noopener noreferrer"
+            <button
+                type="button"
+                @click="openLink('https://github.com/SandipGhimire/', 'Github')"
                 class="mt-1 inline-block font-mono text-sm text-paper underline decoration-line underline-offset-4 transition-colors hover:text-signal"
             >
                 Sandip Ghimire
-            </a>
+            </button>
         </div>
     </div>
 </template>
@@ -171,6 +168,7 @@ import Icons from "@/components/common/Icons.vue";
 import iconUrl from "@/assets/icon.png";
 import { onMounted } from "vue";
 import useApp from "@/store/App/App";
+import { Browser } from "@vendor/sghimire/mobile-browser/resources/js/browser.js";
 
 const appStore = useApp();
 
@@ -203,7 +201,7 @@ const plugins = [
         description: "Native biometric authentication for mobile applications.",
         icon: "Fingerprint",
         url: "https://packagist.org/packages/sghimire/mobile-biometric",
-        github: "https://github.com/SandipGhimire/NativePHP-MobileBiometric/",
+        github: "https://github.com/SandipGhimire/NativePHP-MobileBiometrics/",
     },
     {
         name: "Mobile Scanner",
@@ -226,7 +224,18 @@ const plugins = [
         url: "https://packagist.org/packages/sghimire/mobile-file-access",
         github: "https://github.com/SandipGhimire/NativePHP-MobileFileAccess/",
     },
+    {
+        name: "Mobile Browser",
+        description: "Native in-app browser for mobile applications.",
+        icon: "Globe",
+        url: "https://packagist.org/packages/sghimire/mobile-browser",
+        github: "https://github.com/SandipGhimire/NativePHP-MobileBrowser/",
+    },
 ];
+
+async function openLink(url: string, title: string) {
+    await Browser.open(url).external();
+}
 
 onMounted(() => {
     appStore.setTitle("About");

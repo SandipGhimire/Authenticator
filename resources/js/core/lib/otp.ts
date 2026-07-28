@@ -10,6 +10,7 @@ export interface ParsedAccount {
     name: string;
     username: string;
     secret: string;
+    issuer?: string;
     algorithm: Algorithm;
     digits: Digits;
     period: number;

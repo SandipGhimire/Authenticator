@@ -35,6 +35,7 @@ class NativeServiceProvider extends ServiceProvider
     {
         return [
             \Sandip\Biometric\Native\BiometricsServiceProvider::class,
+            \Sandip\Browser\Native\BrowserServiceProvider::class,
             \Sandip\FileAccess\Native\FileAccessServiceProvider::class,
             \Sandip\Scanner\Native\ScannerServiceProvider::class,
             \Sandip\SecureStorage\Native\SecureStorageServiceProvider::class,
