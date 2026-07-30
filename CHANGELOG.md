@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   read from a single `appVersion` constant exported from `main.ts`, instead
   of being hardcoded as `v1.0.0` in each place.
 
+---
+
 ## [1.0.0] - 2026-07-28
 
 Initial release of Authenticator — a privacy-focused, offline two-factor
