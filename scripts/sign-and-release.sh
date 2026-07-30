@@ -6,14 +6,24 @@
 # Usage:
 #   ./scripts/sign-and-release.sh [--publish]
 #
-#   --publish   After signing, create a GitHub Release and upload the APK.
-#               Requires `gh` (GitHub CLI) to be installed and authenticated.
+#   --publish   After signing, tag the release and create a GitHub Release
+#               with the APK attached. Requires `gh` (GitHub CLI) to be
+#               installed and authenticated.
 #
 # Steps:
 #   1. Build   — php artisan native:run --build=release android --env=production
 #   2. Sign    — zipalign + apksigner (v3 scheme)
 #   3. Verify  — apksigner verify
-#   4. Publish — gh release create (only with --publish)
+#   4. Publish — git tag + gh release create (only with --publish)
+#
+# With --publish, the git tag message and GitHub release notes are pulled
+# straight from the CHANGELOG.md entry for $NATIVEPHP_APP_VERSION (the
+# "## [x.y.z] ..." section):
+#   - If that section doesn't exist, the script stops immediately (before
+#     building/signing anything) and tells you to add one first.
+#   - If the section is missing a release date, or is still marked
+#     "Unreleased", today's date is filled in automatically. CHANGELOG.md is
+#     left modified on disk — review and commit it as part of the release.
 # =============================================================================
 
 set -euo pipefail
@@ -80,6 +90,56 @@ prompt_password() {
         eval "$var_name='$val'"
     fi
 }
+
+resolve_changelog_entry() {
+    local changelog="$(dirname "$0")/../CHANGELOG.md"
+    [[ -f "$changelog" ]] || die "CHANGELOG.md not found at $changelog"
+
+    local escaped_version="${APP_VERSION//./\\.}"
+    local header_line_no
+    header_line_no=$(grep -n -E "^## \[${escaped_version}\]" "$changelog" | head -1 | cut -d: -f1)
+
+    if [[ -z "$header_line_no" ]]; then
+        die "No CHANGELOG.md entry found for version $APP_VERSION.
+Add a '## [$APP_VERSION] - <date or Unreleased>' section to CHANGELOG.md documenting this release, then try again."
+    fi
+
+    local header_text
+    header_text=$(sed -n "${header_line_no}p" "$changelog")
+
+    if [[ "$header_text" =~ ^##\ \[${escaped_version}\]\ *(-\ *[Uu]nreleased)?\ *$ ]]; then
+        local today
+        today="$(date +%Y-%m-%d)"
+        warn "CHANGELOG.md entry for $APP_VERSION has no release date — setting it to $today"
+        sed -i "${header_line_no}s/.*/## [$APP_VERSION] - $today/" "$changelog"
+        warn "CHANGELOG.md was modified — review and commit this change."
+    fi
+
+    CHANGELOG_BODY=$(awk -v ver="$escaped_version" '
+        BEGIN { capture = 0 }
+        $0 ~ ("^## \\[" ver "\\]") { capture = 1; next }
+        capture && /^## \[/ { exit }
+        capture && /^---[[:space:]]*$/ { exit }
+        capture { print }
+    ' "$changelog" | awk '
+        { line[NR] = $0 }
+        END {
+            first = 1; last = NR
+            while (first <= last && line[first] == "") first++
+            while (last >= first && line[last] == "") last--
+            for (i = first; i <= last; i++) print line[i]
+        }
+    ')
+
+    if [[ -z "$(echo "$CHANGELOG_BODY" | tr -d '[:space:]')" ]]; then
+        die "CHANGELOG.md entry for $APP_VERSION is empty. Add release notes before releasing."
+    fi
+}
+
+if [[ "$PUBLISH" == "true" ]]; then
+    resolve_changelog_entry
+    success "Using CHANGELOG.md entry for v$APP_VERSION as the release message"
+fi
 
 # ---------------------------------------------------------------------------
 # Step 1 — Check toolchain
@@ -204,11 +264,36 @@ if [[ "$PUBLISH" == "true" ]]; then
 
     TAG="v$APP_VERSION"
 
+    TAG_MESSAGE_FILE="$(mktemp)"
+    RELEASE_NOTES_FILE="$(mktemp)"
+    trap 'rm -f "$TAG_MESSAGE_FILE" "$RELEASE_NOTES_FILE"' EXIT
+
+    {
+        echo "$APP_NAME $TAG"
+        echo ""
+        echo "$CHANGELOG_BODY"
+    } > "$TAG_MESSAGE_FILE"
+
+    {
+        echo "## $APP_NAME $TAG"
+        echo ""
+        echo "$CHANGELOG_BODY"
+        echo ""
+        echo "### Installation"
+        echo "Download and install \`$(basename "$SIGNED_APK")\` on your Android device."
+        echo ""
+        echo "> **Note**: Enable *Install from unknown sources* in your device settings if prompted."
+        echo ""
+        echo "### App Info"
+        echo "- Package: \`$APP_ID\`"
+        echo "- Version: \`$APP_VERSION\`"
+    } > "$RELEASE_NOTES_FILE"
+
     # Create or reuse tag
     if git tag -l "$TAG" | grep -q "$TAG"; then
         warn "Tag $TAG already exists — skipping tag creation"
     else
-        git tag -a "$TAG" -m "Release $TAG"
+        git tag -a "$TAG" -F "$TAG_MESSAGE_FILE"
         git push origin "$TAG"
         success "Pushed tag $TAG"
     fi
@@ -217,16 +302,7 @@ if [[ "$PUBLISH" == "true" ]]; then
     gh release create "$TAG" \
         "$SIGNED_APK" \
         --title "$APP_NAME $TAG" \
-        --notes "## $APP_NAME $TAG
-
-### Installation
-Download and install \`$(basename "$SIGNED_APK")\` on your Android device.
-
-> **Note**: Enable *Install from unknown sources* in your device settings if prompted.
-
-### App Info
-- Package: \`$APP_ID\`
-- Version: \`$APP_VERSION\`" \
+        --notes-file "$RELEASE_NOTES_FILE" \
         --latest
 
     RELEASE_URL=$(gh release view "$TAG" --json url -q .url)
