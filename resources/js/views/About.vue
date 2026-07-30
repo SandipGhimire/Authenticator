@@ -16,7 +16,7 @@
                     Authenticator
                 </h1>
 
-                <p class="mt-1 font-mono text-xs text-ash">v1.0.0</p>
+                <p class="mt-1 font-mono text-xs text-ash">{{ appVersion }}</p>
             </div>
 
             <p class="max-w-[50ch] text-sm leading-relaxed text-ash">
@@ -100,7 +100,7 @@
 
                         <button
                             type="button"
-                            @click="openLink(plugin.url, plugin.name)"
+                            @click="openExternalLink(plugin.url)"
                             :aria-label="`View ${plugin.name} on Packagist`"
                             class="shrink-0 text-ash transition-colors hover:text-signal"
                         >
@@ -108,7 +108,7 @@
                         </button>
                         <button
                             type="button"
-                            @click="openExternalLink(plugin.github)"
+                            @click="openLink(plugin.github, plugin.name)"
                             :aria-label="`View ${plugin.name} on Github`"
                             class="shrink-0 text-ash transition-colors hover:text-signal"
                         >
@@ -169,6 +169,7 @@ import iconUrl from "@/assets/icon.png";
 import { onMounted } from "vue";
 import useApp from "@/store/App/App";
 import { Browser } from "@vendor/sghimire/mobile-browser/resources/js/browser.js";
+import { appVersion } from "@/main";
 
 const appStore = useApp();
 
@@ -201,7 +202,7 @@ const plugins = [
         description: "Native biometric authentication for mobile applications.",
         icon: "Fingerprint",
         url: "https://packagist.org/packages/sghimire/mobile-biometric",
-        github: "https://github.com/SandipGhimire/NativePHP-MobileBiometrics/",
+        github: "https://github.com/SandipGhimire/NativePHP-MobileBiometric/",
     },
     {
         name: "Mobile Scanner",

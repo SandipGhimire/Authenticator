@@ -1,88 +1,95 @@
 <template>
-    <div class="relative overflow-hidden rounded-xl">
+    <div class="relative overflow-hidden rounded-lg border border-line">
         <div
             class="absolute inset-y-0 right-0 flex w-20 items-stretch"
             aria-hidden="true"
         >
             <div
-                class="flex w-full items-center justify-center bg-red-500 text-paper"
+                class="flex w-full items-center justify-center bg-red-500 text-paper rounded-r-lg"
             >
                 <Icons name="Trash2" :size="20" />
             </div>
         </div>
 
         <div
-            class="relative touch-pan-y border border-line bg-panel p-4 transition-transform"
+            class="relative -mr-px touch-pan-y bg-panel p-3.5 transition-transform"
             :class="dragging ? 'duration-0' : 'duration-200 ease-out'"
             :style="{ transform: `translateX(${translateX}px)` }"
+            aria-label="Copy authentication code"
             @pointerdown="onPointerDown"
             @pointermove="onPointerMove"
             @pointerup="onPointerUp"
             @pointercancel="onPointerUp"
+            @click="copyCode"
         >
-            <div class="flex items-start justify-between gap-4">
-                <div class="min-w-0">
-                    <div class="flex items-center gap-2">
-                        <div
-                            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface"
-                        >
-                            <span
-                                class="font-display text-sm font-semibold text-signal"
-                            >
-                                {{ account.name.charAt(0) }}
-                            </span>
-                        </div>
-
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <div class="flex min-w-0 items-center gap-2.5">
                         <div class="min-w-0">
-                            <p class="truncate text-sm font-medium text-paper">
-                                {{ account.name }}
-                            </p>
-
-                            <p class="truncate text-xs text-ash">
-                                {{ account.username }}
+                            <p class="truncate text-ash">
+                                <span class="font-medium"
+                                    >{{ account.name }}: </span
+                                >{{ account.username }}
                             </p>
                         </div>
                     </div>
-                </div>
-
-                <div class="flex shrink-0 items-center gap-1.5">
                     <div
-                        class="h-1.5 w-1.5 rounded-full"
-                        :class="remaining <= 5 ? 'bg-red-400' : 'bg-signal'"
-                    />
-
-                    <span
-                        class="font-mono text-[11px]"
-                        :class="remaining <= 5 ? 'text-red-400' : 'text-ash'"
+                        class="text-3xl font-semibold tracking-[0.12em] text-paper mt-1"
                     >
-                        {{ remaining }}s
-                    </span>
+                        {{ code }}
+                    </div>
                 </div>
-            </div>
 
-            <div class="mt-5 flex items-end justify-between">
-                <p
-                    class="font-mono text-3xl font-semibold tracking-[0.15em] text-paper"
-                >
-                    {{ code }}
-                </p>
+                <div class="relative flex h-10 w-10">
+                    <svg viewBox="0 0 32 32" class="-rotate-90">
+                        <circle
+                            cx="16"
+                            cy="16"
+                            r="13"
+                            fill="none"
+                            stroke-width="2"
+                            class="stroke-surface"
+                        />
+                        <circle
+                            cx="16"
+                            cy="16"
+                            r="13"
+                            fill="none"
+                            stroke-width="3"
+                            class="stroke-current transition-all duration-100 ease-linear"
+                            :class="
+                                remaining <= 5 ? 'text-red-400' : 'text-signal'
+                            "
+                            :stroke-dasharray="circumference"
+                            :stroke-dashoffset="dashOffset"
+                        />
+                    </svg>
 
-                <button
-                    type="button"
-                    class="rounded-lg p-2 text-ash transition-colors hover:bg-surface hover:text-paper"
-                    aria-label="Copy authentication code"
-                    @click="copyCode"
-                >
-                    <Icons name="Copy" :size="17" />
-                </button>
-            </div>
-
-            <div class="mt-4 h-1 overflow-hidden rounded-full bg-surface">
-                <div
-                    class="h-full rounded-full transition-all duration-1000"
-                    :class="remaining <= 5 ? 'bg-red-400' : 'bg-signal'"
-                    :style="{ width: `${progress}%` }"
-                />
+                    <div
+                        class="absolute h-10 w-10 flex justify-center items-center"
+                    >
+                        <Transition name="fade" mode="out-in">
+                            <Icons
+                                v-if="copied"
+                                key="check"
+                                name="Check"
+                                :size="16"
+                                :stroke-width="4"
+                                class-value="text-green-600"
+                            />
+                            <span
+                                v-else
+                                key="secs"
+                                class="font-mono text-[14px] tabular-nums"
+                                :class="
+                                    remaining <= 5 ? 'text-red-400' : 'text-ash'
+                                "
+                            >
+                                {{ remaining }}
+                            </span>
+                        </Transition>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -132,7 +139,7 @@
 
                         <button
                             type="button"
-                            class="flex-1 rounded-lg bg-red-500 py-2.5 text-sm font-medium text-paper transition-colors active:bg-red-600 disabled:opacity-60"
+                            class="flex-1 rounded-lg bg-red-500 py-2.5 text-sm font-medium text-paper transition-colors active:bg-red-500 disabled:opacity-60"
                             :disabled="deleting"
                             @click="confirmDelete"
                         >
@@ -165,8 +172,12 @@ const ACTION_WIDTH = 80;
 const code = ref("");
 const remaining = ref(props.account.period);
 
-const progress = computed(() => {
-    return (remaining.value / props.account.period) * 100;
+const RADIUS = 13;
+const circumference = 2 * Math.PI * RADIUS;
+
+const dashOffset = computed(() => {
+    const progress = remaining.value / props.account.period;
+    return circumference * (1 - progress);
 });
 
 watch(
@@ -178,8 +189,21 @@ watch(
     { immediate: true },
 );
 
+const copied = ref(false);
+let copiedTimeout: ReturnType<typeof window.setTimeout> | null | number = null;
+
 const copyCode = async () => {
     await navigator.clipboard.writeText(code.value.replace(/\s/g, ""));
+
+    copied.value = true;
+
+    if (copiedTimeout) {
+        window.clearTimeout(copiedTimeout);
+    }
+
+    copiedTimeout = window.setTimeout(() => {
+        copied.value = false;
+    }, 1200);
 };
 
 const translateX = ref(0);
@@ -235,8 +259,6 @@ const onPointerMove = (event: PointerEvent) => {
     );
 };
 
-// Must match the card's "duration-200" transition class above, so the
-// confirm dialog only appears once the row has visibly slid shut.
 const CLOSE_TRANSITION_MS = 200;
 
 const endDrag = () => {
@@ -286,7 +308,7 @@ const confirmDelete = async () => {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.2s ease;
+    transition: opacity 0.15s ease;
 }
 
 .fade-enter-from,

@@ -51,7 +51,7 @@
 
                 <div class="mt-5 border-t-2 border-line pt-3">
                     <button
-                        class="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 p-3 active:bg-red-600 active:scale-[0.98] transition-transform"
+                        class="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 p-3 active:bg-red-500 active:scale-[0.98] transition-transform"
                         @click="appStore.logout"
                     >
                         <Icons name="LogOut" :size="18" />
@@ -66,7 +66,7 @@
                     padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
                 "
             >
-                Made By Sandip Ghimire (v1.0.0)
+                Made By Sandip Ghimire ({{ appVersion }})
             </div>
         </aside>
     </Transition>
@@ -77,6 +77,7 @@ import { onBeforeUnmount, onMounted } from "vue";
 import Icons from "@/components/common/Icons.vue";
 import { navItems } from "@/router";
 import useApp from "@/store/App/App";
+import { appVersion } from "@/main";
 
 const navIconMap: Record<string, string> = {
     home: "Home",

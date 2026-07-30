@@ -19,7 +19,7 @@ export default defineConfig({
         nativephpMobile(),
         tailwindcss(),
         laravel({
-            input: ["resources/js/app.ts"],
+            input: ["resources/js/main.ts"],
             hotFile: nativephpHotFile(),
             refresh: true,
         }),

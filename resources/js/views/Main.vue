@@ -34,11 +34,11 @@
                 class="relative flex h-36 w-36 items-center justify-center rounded-full border border-line bg-panel shadow-xl transition-all duration-300 active:scale-95"
                 :class="{
                     'border-green-500': status === 'success',
-                    'border-red-400': status === 'failed',
+                    'border-red-500': status === 'failed',
                     'animate-biometric-shake': status === 'failed',
                 }"
                 aria-label="Authenticate with biometrics"
-                @click="appStore.authenticate"
+                @click="status !== 'success' && appStore.authenticate()"
             >
                 <div
                     v-if="status === 'success'"
@@ -47,7 +47,7 @@
 
                 <div
                     v-if="status === 'failed'"
-                    class="absolute inset-2 rounded-full border border-red-400 animate-failure-ring"
+                    class="absolute inset-2 rounded-full border border-red-500 animate-failure-ring"
                 />
 
                 <Transition name="icon-switch" mode="out-in">
@@ -65,7 +65,7 @@
                             status === 'success'
                                 ? 'text-green-500'
                                 : status === 'failed'
-                                  ? 'text-red-400'
+                                  ? 'text-red-500'
                                   : 'text-signal'
                         "
                     />
@@ -93,7 +93,7 @@
                 key="failed"
                 class="mt-8 text-center"
             >
-                <p class="text-lg font-medium text-red-400">
+                <p class="text-lg font-medium text-red-500">
                     Authentication failed
                 </p>
 

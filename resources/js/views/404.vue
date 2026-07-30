@@ -47,7 +47,7 @@
                 class="mt-8 w-full rounded-xl border border-line bg-panel p-4 text-left"
             >
                 <div class="mb-3 flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-red-400" />
+                    <span class="h-1.5 w-1.5 rounded-full bg-red-500" />
                     <span class="h-1.5 w-1.5 rounded-full bg-yellow-400" />
                     <span class="h-1.5 w-1.5 rounded-full bg-signal" />
                 </div>
