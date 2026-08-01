@@ -97,7 +97,7 @@ resolve_changelog_entry() {
 
     local escaped_version="${APP_VERSION//./\\.}"
     local header_line_no
-    header_line_no=$(grep -n -E "^## \[${escaped_version}\]" "$changelog" | head -1 | cut -d: -f1)
+    header_line_no=$(grep -n -E "^## \[${escaped_version}\]" "$changelog" | head -1 | cut -d: -f1 || true)
 
     if [[ -z "$header_line_no" ]]; then
         die "No CHANGELOG.md entry found for version $APP_VERSION.

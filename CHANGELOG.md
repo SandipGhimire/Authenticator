@@ -23,11 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   exists and none is pinned or remembered).
 - A new Settings screen (Sidebar → Settings), itself gated behind a fresh
   biometric check on every visit, with controls to:
-  - enable or disable the profile switcher entirely,
-  - remember the last-used profile across launches,
-  - pin a specific profile to always boot into,
-  - require biometrics to switch profiles, independently from requiring
-    biometrics to delete one.
+    - enable or disable the profile switcher entirely,
+    - remember the last-used profile across launches,
+    - pin a specific profile to always boot into,
+    - require biometrics to switch profiles, independently from requiring
+      biometrics to delete one.
 - An account-selection step when exporting: both the encrypted backup
   export and the Google Authenticator QR export now let you choose which
   accounts to include instead of always exporting the whole vault.
