@@ -29,12 +29,11 @@
         <button
             v-else
             type="button"
-            class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-medium text-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60"
-            :disabled="busy"
+            class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-medium text-paper transition-colors hover:bg-surface"
             @click="openModal"
         >
             <Icons name="QrCode" :size="16" />
-            {{ busy ? "Generating..." : "Generate QR Code" }}
+            Generate QR Code
         </button>
 
         <div
@@ -81,80 +80,121 @@
                         </button>
                     </div>
 
-                    <p
-                        class="mt-4 font-display text-base font-semibold text-paper"
-                    >
-                        Scan with Google Authenticator
-                    </p>
-
-                    <p class="mt-1.5 text-sm leading-relaxed text-ash">
-                        Open Google Authenticator, choose
-                        <span class="text-paper">Import existing accounts</span
-                        >, then scan this code.
-                    </p>
-
-                    <div
-                        class="mt-3 rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-xs leading-relaxed text-red-500/90"
-                    >
-                        Anyone who scans this code gets full access to these
-                        accounts. Only show it to a device and app you trust,
-                        then close this dialog.
-                    </div>
-
-                    <div
-                        class="mt-4 flex items-center justify-center rounded-xl p-4"
-                    >
-                        <img
-                            v-if="currentImage"
-                            :src="currentImage"
-                            :alt="`Google Authenticator import QR code${pages.length > 1 ? ` (part ${pageIndex + 1} of ${pages.length})` : ''}`"
-                            class="h-64 w-64"
-                        />
-                    </div>
-
-                    <div
-                        v-if="pages.length > 1"
-                        class="mt-4 flex items-center justify-between gap-3"
-                    >
-                        <button
-                            type="button"
-                            class="flex items-center gap-1 rounded-lg border border-line px-3 py-2 text-xs font-medium text-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
-                            :disabled="pageIndex === 0"
-                            @click="pageIndex -= 1"
+                    <template v-if="step === 'select'">
+                        <p
+                            class="mt-4 font-display text-base font-semibold text-paper"
                         >
-                            <Icons name="ChevronLeft" :size="14" />
-                            Prev
-                        </button>
+                            Choose accounts
+                        </p>
 
-                        <p class="font-mono text-[11px] text-ash">
-                            Part {{ pageIndex + 1 }} of {{ pages.length }}
+                        <p class="mt-1.5 text-sm leading-relaxed text-ash">
+                            Pick which accounts to include in the QR code.
+                        </p>
+
+                        <div class="mt-4">
+                            <AccountPicker
+                                :accounts="accounts"
+                                v-model="selectedIds"
+                            />
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
+                            <button
+                                type="button"
+                                class="flex-1 rounded-lg border border-line py-2.5 text-sm font-medium text-paper transition-colors hover:bg-surface"
+                                @click="close"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                class="flex-1 rounded-lg bg-signal py-2.5 text-sm font-medium text-paper transition-colors active:opacity-90 disabled:opacity-60"
+                                :disabled="selectedIds.length === 0 || busy"
+                                @click="generate"
+                            >
+                                {{ busy ? "Generating..." : "Continue" }}
+                            </button>
+                        </div>
+                    </template>
+
+                    <template v-else>
+                        <p
+                            class="mt-4 font-display text-base font-semibold text-paper"
+                        >
+                            Scan with Google Authenticator
+                        </p>
+
+                        <p class="mt-1.5 text-sm leading-relaxed text-ash">
+                            Open Google Authenticator, choose
+                            <span class="text-paper"
+                                >Import existing accounts</span
+                            >, then scan this code.
+                        </p>
+
+                        <div
+                            class="mt-3 rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-xs leading-relaxed text-red-500/90"
+                        >
+                            Anyone who scans this code gets full access to these
+                            accounts. Only show it to a device and app you
+                            trust, then close this dialog.
+                        </div>
+
+                        <div
+                            class="mt-4 flex items-center justify-center rounded-xl p-4"
+                        >
+                            <img
+                                v-if="currentImage"
+                                :src="currentImage"
+                                :alt="`Google Authenticator import QR code${pages.length > 1 ? ` (part ${pageIndex + 1} of ${pages.length})` : ''}`"
+                                class="h-64 w-64"
+                            />
+                        </div>
+
+                        <div
+                            v-if="pages.length > 1"
+                            class="mt-4 flex items-center justify-between gap-3"
+                        >
+                            <button
+                                type="button"
+                                class="flex items-center gap-1 rounded-lg border border-line px-3 py-2 text-xs font-medium text-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
+                                :disabled="pageIndex === 0"
+                                @click="pageIndex -= 1"
+                            >
+                                <Icons name="ChevronLeft" :size="14" />
+                                Prev
+                            </button>
+
+                            <p class="font-mono text-[11px] text-ash">
+                                Part {{ pageIndex + 1 }} of {{ pages.length }}
+                            </p>
+
+                            <button
+                                type="button"
+                                class="flex items-center gap-1 rounded-lg border border-line px-3 py-2 text-xs font-medium text-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
+                                :disabled="pageIndex === pages.length - 1"
+                                @click="pageIndex += 1"
+                            >
+                                Next
+                                <Icons name="ChevronRight" :size="14" />
+                            </button>
+                        </div>
+
+                        <p
+                            v-if="pages.length > 1"
+                            class="mt-2 text-center font-mono text-[10px] text-ash"
+                        >
+                            Too many accounts for one code — scan every part.
                         </p>
 
                         <button
                             type="button"
-                            class="flex items-center gap-1 rounded-lg border border-line px-3 py-2 text-xs font-medium text-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
-                            :disabled="pageIndex === pages.length - 1"
-                            @click="pageIndex += 1"
+                            class="mt-4 w-full rounded-lg bg-signal py-2.5 text-sm font-medium text-paper transition-colors active:opacity-90"
+                            @click="close"
                         >
-                            Next
-                            <Icons name="ChevronRight" :size="14" />
+                            Done
                         </button>
-                    </div>
-
-                    <p
-                        v-if="pages.length > 1"
-                        class="mt-2 text-center font-mono text-[10px] text-ash"
-                    >
-                        Too many accounts for one code — scan every part.
-                    </p>
-
-                    <button
-                        type="button"
-                        class="mt-4 w-full rounded-lg bg-signal py-2.5 text-sm font-medium text-paper transition-colors active:opacity-90"
-                        @click="close"
-                    >
-                        Done
-                    </button>
+                    </template>
                 </div>
             </div>
         </Transition>
@@ -165,7 +205,8 @@
 import { computed, reactive, ref } from "vue";
 import QRCode from "qrcode";
 import Icons from "@/components/common/Icons.vue";
-import { listAccounts } from "@/core/lib/vault";
+import AccountPicker from "@/components/ImportExport/AccountPicker.vue";
+import { listAccounts, type StoredAccount } from "@/core/lib/vault";
 import {
     buildGoogleMigrationQr,
     OtpParseError,
@@ -180,6 +221,10 @@ const open = ref(false);
 const busy = ref(false);
 const pages = ref<string[]>([]);
 const pageIndex = ref(0);
+
+const step = ref<"select" | "qr">("select");
+const accounts = ref<StoredAccount[]>([]);
+const selectedIds = ref<string[]>([]);
 
 const status = reactive<{ type: "success" | "error"; message: string }>({
     type: "success",
@@ -201,24 +246,33 @@ const showStatus = (type: "success" | "error", message: string) => {
 const currentImage = computed(() => pages.value[pageIndex.value] ?? "");
 
 const openModal = async () => {
+    status.message = "";
+    step.value = "select";
+
+    accounts.value = await listAccounts();
+    selectedIds.value = accounts.value.map((account) => account.id);
+
+    open.value = true;
+};
+
+const generate = async () => {
     if (busy.value) return;
 
-    status.message = "";
     busy.value = true;
 
     try {
-        const accounts: ParsedAccount[] = (await listAccounts()).map(
-            ({ name, username, secret, algorithm, digits, period }) => ({
+        const selected: ParsedAccount[] = accounts.value
+            .filter((account) => selectedIds.value.includes(account.id))
+            .map(({ name, username, secret, algorithm, digits, period }) => ({
                 name,
                 username,
                 secret,
                 algorithm,
                 digits,
                 period,
-            }),
-        );
+            }));
 
-        const uris = buildGoogleMigrationQr(accounts);
+        const uris = buildGoogleMigrationQr(selected);
 
         pages.value = await Promise.all(
             uris.map((uri) =>
@@ -232,7 +286,7 @@ const openModal = async () => {
         );
 
         pageIndex.value = 0;
-        open.value = true;
+        step.value = "qr";
     } catch (e) {
         showStatus(
             "error",

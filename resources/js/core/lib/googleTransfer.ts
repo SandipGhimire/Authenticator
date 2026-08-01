@@ -126,9 +126,7 @@ function getMigrationPayloadType(): protobuf.Type {
     return migrationRoot.lookupType("MigrationPayload");
 }
 
-export function parseGoogleMigrationQr(
-    raw: string,
-): GoogleMigrationResult {
+export function parseGoogleMigrationQr(raw: string): GoogleMigrationResult {
     try {
         const value = raw.trim();
 
@@ -199,18 +197,14 @@ export function parseGoogleMigrationQr(
             );
         }
 
-        const payload =
-            MigrationPayload.toObject(decoded, {
-                longs: Number,
-                enums: Number,
-                bytes: Uint8Array,
-                defaults: true,
-            }) as unknown as MigrationPayload;
+        const payload = MigrationPayload.toObject(decoded, {
+            longs: Number,
+            enums: Number,
+            bytes: Uint8Array,
+            defaults: true,
+        }) as unknown as MigrationPayload;
 
-        if (
-            !payload.otpParameters ||
-            payload.otpParameters.length === 0
-        ) {
+        if (!payload.otpParameters || payload.otpParameters.length === 0) {
             throw new OtpParseError(
                 "Migration QR code does not contain any accounts.",
             );
@@ -335,16 +329,12 @@ function bytesToBase32(bytes: Uint8Array): string {
         while (bits >= 5) {
             bits -= 5;
 
-            result += alphabet[
-                (buffer >> bits) & 0x1f
-            ];
+            result += alphabet[(buffer >> bits) & 0x1f];
         }
     }
 
     if (bits > 0) {
-        result += alphabet[
-            (buffer << (5 - bits)) & 0x1f
-        ];
+        result += alphabet[(buffer << (5 - bits)) & 0x1f];
     }
 
     return result;
@@ -391,8 +381,6 @@ function parseMigrationName(
     };
 }
 
-// Google Authenticator splits large exports across multiple QR codes; this
-// keeps each generated code within the size/density it can reliably scan.
 const MAX_ACCOUNTS_PER_QR = 10;
 
 const MIGRATION_ALGORITHM: Record<Algorithm, number> = {
@@ -449,12 +437,6 @@ function randomBatchId(): number {
     return crypto.getRandomValues(new Uint32Array(1))[0] & 0x7fffffff;
 }
 
-/**
- * Encodes accounts as `otpauth-migration://` URIs that the Google
- * Authenticator app's own "Scan a QR code" import can read. Returns one URI
- * per QR code — more than one when there are enough accounts that Google
- * Authenticator would normally split the export across multiple codes.
- */
 export function buildGoogleMigrationQr(accounts: ParsedAccount[]): string[] {
     if (accounts.length === 0) {
         throw new OtpParseError("There are no accounts to export.");
@@ -471,18 +453,16 @@ export function buildGoogleMigrationQr(accounts: ParsedAccount[]): string[] {
     const batchId = randomBatchId();
 
     return chunks.map((chunk, batchIndex) => {
-        const otpParameters: MigrationOtpParameter[] = chunk.map(
-            (account) => ({
-                secret: base32ToBytes(account.secret),
-                name: account.username
-                    ? `${account.name}:${account.username}`
-                    : account.name,
-                issuer: account.name,
-                algorithm: MIGRATION_ALGORITHM[account.algorithm],
-                digits: MIGRATION_DIGITS[account.digits],
-                type: 2,
-            }),
-        );
+        const otpParameters: MigrationOtpParameter[] = chunk.map((account) => ({
+            secret: base32ToBytes(account.secret),
+            name: account.username
+                ? `${account.name}:${account.username}`
+                : account.name,
+            issuer: account.name,
+            algorithm: MIGRATION_ALGORITHM[account.algorithm],
+            digits: MIGRATION_DIGITS[account.digits],
+            type: 2,
+        }));
 
         const message = MigrationPayload.create({
             otpParameters,

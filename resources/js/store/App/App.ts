@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { Biometrics } from "@vendor/sghimire/mobile-biometric/resources/js/biometric.js";
 import router from "@/router";
+import useProfile from "@/store/Profile/Profile";
 
 const useApp = defineStore("app", {
     state: () => ({
@@ -22,11 +23,12 @@ const useApp = defineStore("app", {
 
         async successLogin() {
             this.isAuthenticated = true;
-            await router.replace({ name: "home" });
+            await router.replace({ name: "bootstrapping" });
         },
 
         async logout() {
             this.isAuthenticated = false;
+            useProfile().lock();
             await router.replace({ name: "main" });
         },
 

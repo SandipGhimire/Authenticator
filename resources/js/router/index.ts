@@ -1,4 +1,5 @@
 import useApp from "@/store/App/App";
+import useProfile from "@/store/Profile/Profile";
 import {
     createRouter,
     createWebHistory,
@@ -19,6 +20,8 @@ export const navItems: NavItem[] = [
         path: "/user/import-export",
         label: "Backup",
     },
+    { name: "profiles", path: "/user/profiles", label: "Profiles" },
+    { name: "settings", path: "/user/settings", label: "Settings" },
     { name: "about", path: "/user/about", label: "About", showInNav: true },
 ];
 
@@ -30,6 +33,18 @@ const routes: RouteRecordRaw[] = [
         meta: { onlyGuest: true },
     },
     {
+        path: "/bootstrapping",
+        name: "bootstrapping",
+        component: () => import("@/views/Bootstrapping.vue"),
+        meta: { requireAuth: true },
+    },
+    {
+        path: "/choose-profile",
+        name: "choose-profile",
+        component: () => import("@/views/ChooseProfile.vue"),
+        meta: { requireAuth: true },
+    },
+    {
         path: "/user",
         component: () => import("@/layouts/AppLayout.vue"),
         meta: { requireAuth: true },
@@ -38,16 +53,31 @@ const routes: RouteRecordRaw[] = [
                 path: "home",
                 name: "home",
                 component: () => import("@/views/Home.vue"),
+                meta: { requireProfile: true },
             },
             {
                 path: "import-export",
                 name: "import-export",
                 component: () => import("@/views/ImportExport.vue"),
+                meta: { requireProfile: true },
+            },
+            {
+                path: "profiles",
+                name: "profiles",
+                component: () => import("@/views/Profiles.vue"),
+                meta: { requireProfile: true },
+            },
+            {
+                path: "settings",
+                name: "settings",
+                component: () => import("@/views/Settings.vue"),
+                meta: { requireProfile: true },
             },
             {
                 path: "about",
                 name: "about",
                 component: () => import("@/views/About.vue"),
+                meta: { requireProfile: true },
             },
         ],
     },
@@ -65,12 +95,25 @@ const router = createRouter({
 
 router.beforeEach((to) => {
     const appStore = useApp();
+
     if (to.meta.requireAuth && !appStore.isAuthenticated) {
         return { name: "main" };
     }
+
     if (to.meta.onlyGuest && appStore.isAuthenticated) {
         return { name: "home" };
     }
+
+    if (to.meta.requireProfile) {
+        const profileStore = useProfile();
+
+        if (!profileStore.activeProfileId) {
+            return profileStore.phase === "ready"
+                ? { name: "choose-profile" }
+                : { name: "bootstrapping" };
+        }
+    }
+
     return true;
 });
 
