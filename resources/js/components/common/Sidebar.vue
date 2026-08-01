@@ -82,6 +82,8 @@ import { appVersion } from "@/main";
 const navIconMap: Record<string, string> = {
     home: "Home",
     "import-export": "DatabaseBackup",
+    profiles: "Users",
+    settings: "Settings",
     about: "Info",
 };
 const appStore = useApp();

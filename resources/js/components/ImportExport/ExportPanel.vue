@@ -69,90 +69,130 @@
                         />
                     </div>
 
-                    <p
-                        class="mt-4 font-display text-base font-semibold text-paper"
-                    >
-                        Set a backup password
-                    </p>
-
-                    <p class="mt-1.5 text-sm leading-relaxed text-ash">
-                        You'll need this exact password to restore this backup
-                        later. If you forget it, the backup cannot be recovered
-                        — there is no reset.
-                    </p>
-
-                    <form class="mt-4 space-y-3" @submit.prevent="submit">
-                        <div
-                            v-if="error"
-                            class="rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-xs leading-relaxed text-red-500/90"
+                    <template v-if="step === 'select'">
+                        <p
+                            class="mt-4 font-display text-base font-semibold text-paper"
                         >
-                            {{ error }}
-                        </div>
+                            Choose accounts
+                        </p>
 
-                        <div>
-                            <label class="mb-1.5 block text-xs text-ash">
-                                Password
-                            </label>
+                        <p class="mt-1.5 text-sm leading-relaxed text-ash">
+                            Pick which accounts to include in this backup.
+                        </p>
 
-                            <div class="relative">
-                                <input
-                                    v-model="password"
-                                    :type="reveal ? 'text' : 'password'"
-                                    autocomplete="new-password"
-                                    placeholder="At least 6 characters"
-                                    class="pr-10"
-                                />
-
-                                <button
-                                    type="button"
-                                    class="absolute top-1/2 right-3 -translate-y-1/2 text-ash transition-colors hover:text-paper"
-                                    :aria-label="
-                                        reveal
-                                            ? 'Hide password'
-                                            : 'Show password'
-                                    "
-                                    @click="reveal = !reveal"
-                                >
-                                    <Icons
-                                        :name="reveal ? 'EyeOff' : 'Eye'"
-                                        :size="16"
-                                    />
-                                </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="mb-1.5 block text-xs text-ash">
-                                Confirm password
-                            </label>
-
-                            <input
-                                v-model="confirmPassword"
-                                :type="reveal ? 'text' : 'password'"
-                                autocomplete="new-password"
-                                placeholder="Re-enter password"
+                        <div class="mt-4">
+                            <AccountPicker
+                                :accounts="accounts"
+                                v-model="selectedIds"
                             />
                         </div>
 
-                        <div class="flex gap-3 pt-2">
+                        <div class="flex gap-3 pt-4">
                             <button
                                 type="button"
-                                class="flex-1 rounded-lg border border-line py-2.5 text-sm font-medium text-paper transition-colors hover:bg-surface disabled:opacity-60"
-                                :disabled="busy"
+                                class="flex-1 rounded-lg border border-line py-2.5 text-sm font-medium text-paper transition-colors hover:bg-surface"
                                 @click="close"
                             >
                                 Cancel
                             </button>
 
                             <button
-                                type="submit"
+                                type="button"
                                 class="flex-1 rounded-lg bg-signal py-2.5 text-sm font-medium text-paper transition-colors active:opacity-90 disabled:opacity-60"
-                                :disabled="busy"
+                                :disabled="selectedIds.length === 0"
+                                @click="step = 'password'"
                             >
-                                {{ busy ? "Encrypting..." : "Export" }}
+                                Continue
                             </button>
                         </div>
-                    </form>
+                    </template>
+
+                    <template v-else>
+                        <p
+                            class="mt-4 font-display text-base font-semibold text-paper"
+                        >
+                            Set a backup password
+                        </p>
+
+                        <p class="mt-1.5 text-sm leading-relaxed text-ash">
+                            You'll need this exact password to restore this
+                            backup later. If you forget it, the backup cannot be
+                            recovered — there is no reset.
+                        </p>
+
+                        <form class="mt-4 space-y-3" @submit.prevent="submit">
+                            <div
+                                v-if="error"
+                                class="rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-xs leading-relaxed text-red-500/90"
+                            >
+                                {{ error }}
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs text-ash">
+                                    Password
+                                </label>
+
+                                <div class="relative">
+                                    <input
+                                        v-model="password"
+                                        :type="reveal ? 'text' : 'password'"
+                                        autocomplete="new-password"
+                                        placeholder="At least 6 characters"
+                                        class="pr-10"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        class="absolute top-1/2 right-3 -translate-y-1/2 text-ash transition-colors hover:text-paper"
+                                        :aria-label="
+                                            reveal
+                                                ? 'Hide password'
+                                                : 'Show password'
+                                        "
+                                        @click="reveal = !reveal"
+                                    >
+                                        <Icons
+                                            :name="reveal ? 'EyeOff' : 'Eye'"
+                                            :size="16"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs text-ash">
+                                    Confirm password
+                                </label>
+
+                                <input
+                                    v-model="confirmPassword"
+                                    :type="reveal ? 'text' : 'password'"
+                                    autocomplete="new-password"
+                                    placeholder="Re-enter password"
+                                />
+                            </div>
+
+                            <div class="flex gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    class="flex-1 rounded-lg border border-line py-2.5 text-sm font-medium text-paper transition-colors hover:bg-surface disabled:opacity-60"
+                                    :disabled="busy"
+                                    @click="step = 'select'"
+                                >
+                                    Back
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="flex-1 rounded-lg bg-signal py-2.5 text-sm font-medium text-paper transition-colors active:opacity-90 disabled:opacity-60"
+                                    :disabled="busy"
+                                >
+                                    {{ busy ? "Encrypting..." : "Export" }}
+                                </button>
+                            </div>
+                        </form>
+                    </template>
                 </div>
             </div>
         </Transition>
@@ -162,7 +202,8 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import Icons from "@/components/common/Icons.vue";
-import { listAccounts } from "@/core/lib/vault";
+import AccountPicker from "@/components/ImportExport/AccountPicker.vue";
+import { listAccounts, type StoredAccount } from "@/core/lib/vault";
 import { buildBackupFilename, encryptBackup } from "@/core/lib/backup";
 import type { ParsedAccount } from "@/core/lib/otp";
 import {
@@ -187,6 +228,10 @@ const password = ref("");
 const confirmPassword = ref("");
 const error = ref("");
 
+const step = ref<"select" | "password">("select");
+const accounts = ref<StoredAccount[]>([]);
+const selectedIds = ref<string[]>([]);
+
 const status = reactive<{ type: "success" | "error"; message: string }>({
     type: "success",
     message: "",
@@ -204,10 +249,15 @@ const showStatus = (type: "success" | "error", message: string) => {
     }, 6000);
 };
 
-const openModal = () => {
+const openModal = async () => {
     password.value = "";
     confirmPassword.value = "";
     error.value = "";
+    step.value = "select";
+
+    accounts.value = await listAccounts();
+    selectedIds.value = accounts.value.map((account) => account.id);
+
     open.value = true;
 };
 
@@ -232,18 +282,18 @@ const submit = async () => {
     busy.value = true;
 
     try {
-        const accounts: ParsedAccount[] = (await listAccounts()).map(
-            ({ name, username, secret, algorithm, digits, period }) => ({
+        const selected: ParsedAccount[] = accounts.value
+            .filter((account) => selectedIds.value.includes(account.id))
+            .map(({ name, username, secret, algorithm, digits, period }) => ({
                 name,
                 username,
                 secret,
                 algorithm,
                 digits,
                 period,
-            }),
-        );
+            }));
 
-        const bytes = await encryptBackup(accounts, password.value);
+        const bytes = await encryptBackup(selected, password.value);
         const exportId = crypto.randomUUID();
 
         type SavedPayload = {

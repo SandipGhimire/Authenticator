@@ -4,17 +4,22 @@ import {
     OtpParseError,
     type ParsedAccount,
 } from "@/core/lib/otp";
+import {
+    getActiveProfileId,
+    profileAccountKey,
+    profileAccountsIndexKey,
+} from "@/core/lib/profiles";
 
 export interface StoredAccount extends ParsedAccount {
     id: string;
     createdAt: string;
 }
 
-const INDEX_KEY = "accounts_index";
-const recordKey = (id: string) => `account_${id}`;
+const indexKey = () => profileAccountsIndexKey(getActiveProfileId());
+const recordKey = (id: string) => profileAccountKey(getActiveProfileId(), id);
 
 async function readIndex(): Promise<string[]> {
-    const { value } = await SecureStorage.get(INDEX_KEY);
+    const { value } = await SecureStorage.get(indexKey());
 
     if (!value) {
         return [];
@@ -28,7 +33,7 @@ async function readIndex(): Promise<string[]> {
 }
 
 async function writeIndex(ids: string[]): Promise<void> {
-    await SecureStorage.set(INDEX_KEY, JSON.stringify(ids));
+    await SecureStorage.set(indexKey(), JSON.stringify(ids));
 }
 
 let indexLock: Promise<void> = Promise.resolve();
@@ -105,11 +110,6 @@ function isSameAccount(a: ParsedAccount, b: ParsedAccount): boolean {
     );
 }
 
-/**
- * Merges backup accounts into the vault: entries that already exist
- * (identical name/username/secret/algorithm/digits/period) are skipped,
- * malformed entries are counted but not saved, and everything else is added.
- */
 export async function importAccounts(
     candidates: ParsedAccount[],
 ): Promise<ImportSummary> {

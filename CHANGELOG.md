@@ -5,6 +5,49 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - Unreleased
+
+### Added
+
+- Multi-profile vaults: the app can now hold more than one separate,
+  independently-secured set of accounts ("profiles") on the same device,
+  with biometric-gated switching between them.
+- A Profiles screen (Sidebar → Profiles, or the profile chip in the top
+  bar) to add, rename, and delete profiles, each shown with a colored
+  initials avatar.
+- Automatic one-time migration on first launch after this update: any
+  existing vault is moved into a new "Default" profile with no action
+  required and no data loss; safe to resume if interrupted mid-migration.
+- A "Choose a profile" screen shown at unlock whenever the app can't
+  automatically resolve which profile to open (e.g. more than one profile
+  exists and none is pinned or remembered).
+- A new Settings screen (Sidebar → Settings), itself gated behind a fresh
+  biometric check on every visit, with controls to:
+  - enable or disable the profile switcher entirely,
+  - remember the last-used profile across launches,
+  - pin a specific profile to always boot into,
+  - require biometrics to switch profiles, independently from requiring
+    biometrics to delete one.
+- An account-selection step when exporting: both the encrypted backup
+  export and the Google Authenticator QR export now let you choose which
+  accounts to include instead of always exporting the whole vault.
+
+### Changed
+
+- Import and export now always operate on the currently active profile.
+- Vault storage keys are namespaced per profile internally
+  (`core/lib/vault.ts`); existing installs are migrated transparently, as
+  described above.
+- The Import & Export screen is now split into two tabs — **Internal**
+  (encrypted backup file) and **Google Authenticator** (QR-based transfer)
+  — instead of stacking all four panels in one long scroll.
+- The About screen's feature list now reflects the current feature set
+  (biometric-gated vault, multiple profiles, flexible code entry, Google
+  Authenticator migration, encrypted backups) instead of the original
+  generic bullets from 1.0.0.
+
+---
+
 ## [1.0.1] - 2026-07-30
 
 ### Fixed

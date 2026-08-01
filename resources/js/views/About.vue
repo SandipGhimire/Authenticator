@@ -176,22 +176,37 @@ const appStore = useApp();
 const points = [
     {
         label: "Private by design",
-        detail: "Your authentication codes are stored locally on your device and are not uploaded to a remote server.",
+        detail: "Codes are generated locally with the standard TOTP algorithm. Nothing is ever sent to a server — no account to sign into, no cloud sync, no analytics or tracking.",
         icon: "ShieldCheck",
     },
     {
-        label: "No accounts or tracking",
-        detail: "No registration, cloud account, analytics, or unnecessary tracking. The app stays focused on your codes.",
-        icon: "EyeOff",
+        label: "Biometric-gated vault",
+        detail: "Accounts are held in native secure storage behind a biometric unlock, with a fresh check required again for sensitive actions like Settings.",
+        icon: "Fingerprint",
     },
     {
-        label: "Quick access",
-        detail: "A focused, dark interface designed for fast access when you need a verification code.",
-        icon: "Zap",
+        label: "Multiple profiles",
+        detail: "Keep more than one independently-secured set of accounts on the same device, with biometric-gated switching between them.",
+        icon: "Users",
     },
     {
-        label: "Native mobile features",
-        detail: "Built with NativePHP and native mobile capabilities for a more integrated experience.",
+        label: "Flexible code entry",
+        detail: "Add accounts by scanning a QR code or typing the secret by hand, with support for SHA-1/SHA-256/SHA-512 and 6- or 8-digit codes.",
+        icon: "ScanLine",
+    },
+    {
+        label: "Google Authenticator migration",
+        detail: "Import or export accounts using Google Authenticator's own transfer QR format, with control over exactly which accounts are included.",
+        icon: "ArrowRightLeft",
+    },
+    {
+        label: "Encrypted backups",
+        detail: "Move your vault between devices with a password-protected, AES-256-GCM encrypted backup file, only your password can unlock it.",
+        icon: "DatabaseBackup",
+    },
+    {
+        label: "Native mobile experience",
+        detail: "Built with NativePHP and native mobile capabilities for a fast, integrated experience rather than a wrapped web page.",
         icon: "Smartphone",
     },
 ];

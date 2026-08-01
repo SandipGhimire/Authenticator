@@ -25,17 +25,45 @@
             </div>
         </div>
 
-        <div class="space-y-4">
-            <ExportPanel :account-count="accountCount" @exported="refresh" />
-            <ImportPanel @imported="refresh" />
-            <GoogleImportPanel @imported="refresh" />
-            <GoogleExportPanel :account-count="accountCount" />
+        <div
+            class="mb-4 grid grid-cols-2 gap-1 rounded-xl border border-line bg-panel p-1"
+        >
+            <button
+                v-for="tab in tabs"
+                :key="tab.id"
+                type="button"
+                class="flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-sm font-medium transition-colors"
+                :class="
+                    activeTab === tab.id
+                        ? 'bg-surface text-paper'
+                        : 'text-ash hover:text-paper'
+                "
+                @click="activeTab = tab.id"
+            >
+                <Icons :name="tab.icon" :size="15" />
+                {{ tab.label }}
+            </button>
         </div>
 
-        <p class="mt-6 text-center font-mono text-[10px] text-ash">
-            Backups are encrypted with AES-256-GCM. Only your password can
-            unlock them — not even this app can recover a lost one.
-        </p>
+        <div v-show="activeTab === 'internal'" class="space-y-4">
+            <ImportPanel @imported="refresh" />
+            <ExportPanel :account-count="accountCount" @exported="refresh" />
+
+            <p class="mt-6 text-center font-mono text-[10px] text-ash">
+                Backups are encrypted with AES-256-GCM. Only your password can
+                unlock them — not even this app can recover a lost one.
+            </p>
+        </div>
+
+        <div v-show="activeTab === 'google'" class="space-y-4">
+            <GoogleImportPanel @imported="refresh" />
+            <GoogleExportPanel :account-count="accountCount" />
+
+            <p class="mt-6 text-center font-mono text-[10px] text-ash">
+                Please note that Google Authenticator does not support multiple
+                profiles. To organize your accounts, we recommend using labels.
+            </p>
+        </div>
     </div>
 </template>
 
@@ -52,6 +80,15 @@ import { listAccounts } from "@/core/lib/vault";
 const appStore = useApp();
 
 const accountCount = ref(0);
+
+type TabId = "internal" | "google";
+
+const tabs: { id: TabId; label: string; icon: string }[] = [
+    { id: "internal", label: "Internal", icon: "DatabaseBackup" },
+    { id: "google", label: "Google Authenticator", icon: "ScanLine" },
+];
+
+const activeTab = ref<TabId>("internal");
 
 const refresh = async () => {
     accountCount.value = (await listAccounts()).length;
