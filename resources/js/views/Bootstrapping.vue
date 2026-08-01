@@ -1,6 +1,6 @@
 <template>
     <div class="flex min-h-dvh w-full flex-col bg-ink">
-        <Spinner v-if="!error" fullscreen :label="statusLabel" :size="36" />
+        <Spinner v-if="!error" fullscreen label="" :size="36" />
 
         <div
             v-else
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import Spinner from "@/components/common/Spinner.vue";
 import useProfile from "@/store/Profile/Profile";
@@ -31,19 +31,6 @@ const router = useRouter();
 const profileStore = useProfile();
 
 const error = ref("");
-
-const statusLabel = computed(() => {
-    switch (profileStore.phase) {
-        case "migrating":
-            return "Setting up your vault…";
-        case "loading-settings":
-            return "Loading your settings…";
-        case "resolving":
-            return "Almost there…";
-        default:
-            return "Preparing…";
-    }
-});
 
 const start = async () => {
     error.value = "";
